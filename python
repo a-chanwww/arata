@@ -1,0 +1,37 @@
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+
+def send_email(recipient_email):
+    # SMTPサーバーの設定
+    smtp_server = 'smtp.gmail.com'
+    smtp_port = 587
+    sender_email = 'arata.ando3174@gmail.com'  # 自分のGmailアドレス
+    sender_password = 'a-chan31740104'  # Gmailパスワードまたはアプリパスワード
+
+    # メールの内容を作成
+    subject = 'お問い合わせありがとうございます'
+    body = 'このメールはPythonスクリプトから送信されています。'
+
+    # メールメッセージの作成
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # SMTPサーバーに接続してメールを送信
+        server = smtplib.SMTP(smtp_server, smtp_port)
+        server.starttls()  # TLS暗号化の開始
+        server.login(sender_email, sender_password)
+        server.send_message(msg)
+        print('メールが送信されました！')
+    except Exception as e:
+        print(f'エラーが発生しました: {str(e)}')
+    finally:
+        server.quit()
+
+if __name__ == '__main__':
+    recipient = input('メールアドレスを入力してください: ')
+    send_email(recipient)
